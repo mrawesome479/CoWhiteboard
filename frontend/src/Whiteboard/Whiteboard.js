@@ -45,22 +45,23 @@ const Whiteboard = () => {
     const { clientX, clientY } = event;
     console.log(toolType);
 
-    if (toolType === toolTypes.RECTANGLE) {
+    if (toolType === toolTypes.RECTANGLE || toolType === toolTypes.LINE) {
       setAction(actions.DRAWING);
+    
+      const element = createElement({
+        x1: clientX,
+        y1: clientY,
+        x2: clientX,
+        y2: clientY,
+        toolType,
+        id: uuid(),
+      });
+  
+      setSelectedElement(element);
+  
+      dispatch(updateElementInStore(element));
     }
 
-    const element = createElement({
-      x1: clientX,
-      y1: clientY,
-      x2: clientX,
-      y2: clientY,
-      toolType,
-      id: uuid(),
-    });
-
-    setSelectedElement(element);
-
-    dispatch(updateElementInStore(element));
   };
 
   const handleMouseUp = () => {

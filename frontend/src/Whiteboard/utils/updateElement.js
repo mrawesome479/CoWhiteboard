@@ -7,6 +7,7 @@ import { createElement } from "./createElement";
 export const updateElement = ({ id, x1, y1, x2, y2, type, index }, elements) => {
     const elementsCopy = [...elements];
     switch(type){
+        case toolTypes.LINE:
         case toolTypes.RECTANGLE:
             const updatedElement = createElement({ 
                 id,
