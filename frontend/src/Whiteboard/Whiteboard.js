@@ -16,6 +16,10 @@ import {
 } from "./utils";
 import { v4 as uuid } from "uuid";
 import { updateElement as updateElementInStore } from "./whiteboardSlice";
+import { emitCursorPosition } from "../socketConn/socketConn";
+
+let emitCursor = true;
+let lastCursorPosition;
 
 const Whiteboard = () => {
   const canvasRef = useRef();
@@ -157,6 +161,18 @@ const Whiteboard = () => {
 
   const handleMouseMove = (event) => {
     const { clientX, clientY } = event;
+
+    lastCursorPosition = {x: clientX, y : clientY}
+
+    if(emitCursor){
+      emitCursorPosition({x : clientX, y: clientY})
+      emitCursor = false;
+      console.log(`sending position`);
+      setTimeout(() => {
+        emitCursor = true
+        emitCursorPosition(lastCursorPosition)
+      }, [50])
+    }
 
     if (action === actions.DRAWING) {
       // find index of selected element
