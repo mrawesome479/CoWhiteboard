@@ -13,18 +13,15 @@ import {
 import { v4 as uuid } from "uuid";
 import { updateElement as updateElementInStore } from "./whiteboardSlice";
 
-let selectedElement;
-
-const setSelectedElement = (el) => {
-  selectedElement = el;
-};
-
 const Whiteboard = () => {
   const canvasRef = useRef();
+  const textAreaRef = useRef();
+
   const toolType = useSelector((state) => state.whiteboard.tool);
   const elements = useSelector((state) => state.whiteboard.elements);
 
   const [action, setAction] = useState(null);
+  const [selectedElement, setSelectedElement] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -43,32 +40,42 @@ const Whiteboard = () => {
 
   const handleMouseDown = (event) => {
     const { clientX, clientY } = event;
-    console.log(toolType);
 
-    if (toolType === toolTypes.RECTANGLE 
-      || toolType === toolTypes.LINE 
-      || toolType === toolTypes.PENCIL) {
-      setAction(actions.DRAWING);
-    
-      const element = createElement({
-        x1: clientX,
-        y1: clientY,
-        x2: clientX,
-        y2: clientY,
-        toolType,
-        id: uuid(),
-      });
-  
-      setSelectedElement(element);
-  
-      dispatch(updateElementInStore(element));
+    if(selectedElement && action === actions.WRITING){
+      return;
     }
 
+    const element = createElement({
+      x1: clientX,
+      y1: clientY,
+      x2: clientX,
+      y2: clientY,
+      toolType,
+      id: uuid(),
+    });
+
+    switch(toolType){
+      case toolTypes.RECTANGLE:
+      case toolTypes.LINE:
+      case toolTypes.PENCIL: {
+        setAction(actions.DRAWING);
+        break;
+      }
+      case toolTypes.TEXT: {
+        setAction(actions.WRITING);
+        break;
+      }
+      default:
+
+    }
+
+    setSelectedElement(element);
+    dispatch(updateElementInStore(element));
   };
 
   const handleMouseUp = () => {
     const selectedElementIndex = elements.findIndex(
-      (el) => el.id === selectedElement.id
+      (el) => el.id === selectedElement?.id
     );
 
     if (selectedElementIndex !== -1) {
@@ -122,10 +129,41 @@ const Whiteboard = () => {
     }
   };
 
+  const handleTextAreaBlur = (event) => {
+    const {id, x1, y1, type} = selectedElement;
+
+    const index = elements.findIndex((element) => element.id === selectedElement.id)
+    if(index !== -1){
+      updateElement({id, x1, y1, type, text: event.target.value, index}, elements)
+      setAction(null)
+      setSelectedElement(null)
+    }
+  }
+
   return (
     <>
       <Menu />
+      {action === actions.WRITING ? 
+        <textarea 
+          ref={textAreaRef}
+          onBlur={handleTextAreaBlur}
+          style={{
+            position: "absolute",
+            top: selectedElement.y1 - 3,
+            left: selectedElement.x1,
+            font: '24px sans-serif',
+            margin: 0,
+            padding: 0,
+            border: 0,
+            outline: 0,
+            resize: "auto",
+            overflow: "hidden",
+            whiteSpace: 'pre',
+            background: 'transparent'
+          }} /> : 
+        null}
       <canvas
+        id="canvas"
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
