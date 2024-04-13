@@ -1,5 +1,7 @@
 export const actions = {
     DRAWING: "DRAWING",
-    WRITING: "WRITING"
+    WRITING: "WRITING",
+    MOVING: "MOVING",
+    RESIZING: "RESIZING"
 };
   
