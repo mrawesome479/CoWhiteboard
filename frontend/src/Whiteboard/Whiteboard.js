@@ -84,7 +84,9 @@ const Whiteboard = () => {
       case toolTypes.SELECTION: {
         const element = getElementAtPosition(clientX, clientY, elements);
         if(element && 
-          (element.type === toolTypes.RECTANGLE || element.type === toolTypes.TEXT)){
+          (element.type === toolTypes.RECTANGLE 
+            || element.type === toolTypes.TEXT 
+            || element.type === toolTypes.LINE)){
           setAction(
             element.position === cursorPositions.INSIDE
               ? actions.MOVING
