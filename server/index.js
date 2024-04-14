@@ -1,13 +1,26 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+require("dotenv").config();
+const { MONGO_URL, PORT } = process.env;
+const authRoute = require("./routes/authRoutes");
+const { verifyAuthHeaderAndRole } = require("./middlewares/authMiddlewares");
+const Roles = require("./constants/Roles");
 
 const server = http.createServer(app);
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 
+
+// socket code section to support socket event, 
+// Todo: refactor in future
 let elements = [];
 
 const io = new Server(server, {
@@ -44,16 +57,6 @@ io.on("connection", (socket) => {
   })
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello server is working");
-});
-
-const PORT = process.env.PORT || 3003;
-
-server.listen(PORT, () => {
-  console.log("server is running on port", PORT);
-});
-
 const updateElementInElements = (elementData) => {
   const index = elements.findIndex((element) => element.id === elementData.id);
 
@@ -61,3 +64,30 @@ const updateElementInElements = (elementData) => {
 
   elements[index] = elementData;
 };
+
+mongoose
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB is  connected successfully"))
+  .catch((err) => console.error(err));
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Hello server is working");
+});
+
+app.use("/", authRoute);
+
+/*
+  Testing route for authentication header
+*/
+app.post("/test", verifyAuthHeaderAndRole([Roles.USER]), async (req, res) => {
+  return res.json({ message: 'success'});
+})
+
+server.listen(PORT, () => {
+  console.log("server is running on port", PORT);
+});
