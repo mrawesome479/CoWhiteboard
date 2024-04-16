@@ -6,7 +6,7 @@ import { removeCursorPosition, updateCursorPosition } from '../CursorOverlay/cur
 let socket;
 
 export const connectWithSocketServer = () => {
-    socket = io('http://192.168.1.8:3003')
+    socket = io('http://localhost:5002')
     socket.on('connect', () => {
         console.log('connected to socket io server');
     })
