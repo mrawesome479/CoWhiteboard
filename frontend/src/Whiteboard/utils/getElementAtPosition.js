@@ -18,6 +18,7 @@ const onLine = ({x1, x2, y1, y2, x, y, maxDistance = 1}) => {
 }
 
 const positionWithInElement = (x, y, element) => {
+    // console.log(element);
     const {type, x1, x2, y1, y2} = element;
     switch(type){
         case toolTypes.RECTANGLE:

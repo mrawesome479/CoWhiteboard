@@ -56,6 +56,7 @@ const Whiteboard = () => {
     switch(toolType){
       case toolTypes.RECTANGLE:
       case toolTypes.LINE:
+      case toolTypes.CIRCLE:
       case toolTypes.PENCIL: {
         const element = createElement({
           x1: clientX,

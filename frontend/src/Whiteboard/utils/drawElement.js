@@ -4,7 +4,7 @@ import { getSvgPathFromStroke } from ".";
 
 const drawPencilElement = (context, element) => {
   const myStroke = getStroke(element.points, {
-    size: 5,
+    size: 3,
   })
   
   const pathData = getSvgPathFromStroke(myStroke)
@@ -22,6 +22,7 @@ export const drawElement = ({ roughCanvas, context, element }) => {
   switch (element.type) {
     case toolTypes.RECTANGLE:
     case toolTypes.LINE:
+    case toolTypes.CIRCLE:
       return roughCanvas.draw(element.roughElement);
     case toolTypes.PENCIL:
       drawPencilElement(context, element);
