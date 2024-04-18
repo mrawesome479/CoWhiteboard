@@ -4,7 +4,7 @@ import rough from "roughjs/bundled/rough.esm";
 const generator = rough.generator();
 
 const generateRectangle = ({ x1, y1, x2, y2 }) => {
-  return generator.rectangle(x1, y1, x2 - x1, y2 - y1);
+  return generator.rectangle(x1, y1, x2 - x1, y2 - y1 , { roughness: 2.8, fill: 'blue' });
 };
 
 const generateCircle = ({x1, y1, x2, y2}) => {

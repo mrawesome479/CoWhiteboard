@@ -39,15 +39,17 @@ const IconButton = ({ src, type, isRubber }) => {
 
 const Menu = () => {
   return (
-    <div className="menu_container">
-      <IconButton src={rectangleIcon} type={toolTypes.RECTANGLE} />
-      <IconButton src={circleIcon} type={toolTypes.CIRCLE} />
-      <IconButton src={lineIcon} type={toolTypes.LINE} />
-      <IconButton src={rubberIcon} isRubber />
-      <IconButton src={pencilIcon} type={toolTypes.PENCIL} />
-      <IconButton src={textIcon} type={toolTypes.TEXT} />
-      <IconButton src={selectionIcon} type={toolTypes.SELECTION} />
-    </div>
+    <>    
+      <div className="menu_container">
+        <IconButton src={rectangleIcon} type={toolTypes.RECTANGLE} />
+        <IconButton src={circleIcon} type={toolTypes.CIRCLE} />
+        <IconButton src={lineIcon} type={toolTypes.LINE} />
+        <IconButton src={rubberIcon} isRubber />
+        <IconButton src={pencilIcon} type={toolTypes.PENCIL} />
+        <IconButton src={textIcon} type={toolTypes.TEXT} />
+        <IconButton src={selectionIcon} type={toolTypes.SELECTION} />
+      </div>
+    </>
   );
 };
 

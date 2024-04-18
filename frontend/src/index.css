@@ -41,3 +41,15 @@ body {
 .cursor {
   transition: 0.1s;
 }
+
+.f-bold {
+  font-weight: bolder;
+}
+
+.ml-20 {
+  margin-left: 20px;
+}
+
+.mt-5 {
+  margin-top: 5px !important;
+}
