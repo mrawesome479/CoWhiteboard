@@ -1,0 +1,12 @@
+canvas background
+===
+
+#a2d2ff
+#bde0fe
+#ffafcc
+#ffc8dd
+#d0f4de
+#c7f9cc
+
+for elements please refer below style guide and do check for possibility of elements can be generated.
+https://github.com/rough-stuff/rough/wiki#simplification
