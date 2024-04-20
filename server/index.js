@@ -6,7 +6,10 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
+
 const authRoute = require("./routes/authRoutes");
+const boardRoute = require("./routes/boardRoutes");
+
 const { verifyAuthHeaderAndRole } = require("./middlewares/authMiddlewares");
 const Roles = require("./constants/Roles");
 
@@ -80,6 +83,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", authRoute);
+app.use("/board", verifyAuthHeaderAndRole([Roles.USER]), boardRoute)
 
 /*
   Testing route for authentication header

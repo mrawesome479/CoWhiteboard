@@ -39,6 +39,8 @@ module.exports.verifyAuthHeaderAndRole = (roles) => async (req, res, next) => {
                 })
             }   
         }    
+
+        req.userId = user._id
         next();
     })
 }
