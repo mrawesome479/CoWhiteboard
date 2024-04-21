@@ -106,6 +106,7 @@ module.exports.getBoardDetails = async (req, res, next) => {
             });
         }
 
+        // Return board details in the response
         res.status(200).json({
             message: "Board details retrieved successfully",
             board,
@@ -119,3 +120,44 @@ module.exports.getBoardDetails = async (req, res, next) => {
         });
     }
 };
+
+module.exports.removeUserFromBoard = async (req, res, next) => {
+    try {
+        const { boardId, userId } = req.body;
+
+        console.log(`${boardId} ${userId}`);
+
+        const [board, user] = await Promise.all([
+            Board.findById(boardId),
+            User.findById(userId)
+        ]);
+
+        if (!board || !user) {
+            return res.status(404).json({
+                message: "Passed boardID or userId is invalid",
+                success: false
+            });
+        }
+
+        const isAlreadyMapped = board.members.some(member => member.memberId.equals(user._id));
+
+        console.log(`isAlreadyMapped : ${isAlreadyMapped}`);
+        if (!isAlreadyMapped) {
+            return res.status(202).json({
+                message: "User is not mapped with board",
+                success: true
+            });
+        }
+
+        board.members = board.members.filter(member => !member.memberId.equals(user._id));
+        console.log(board.members);
+
+        const updatedBoard = await Board.findByIdAndUpdate(board._id, board, { new: true });
+        console.log(`updated board : ${updatedBoard}`);
+
+        res.status(200).json({ message: "User removed from board successfully", success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error", success: false });
+    }
+}
