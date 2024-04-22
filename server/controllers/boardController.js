@@ -161,3 +161,70 @@ module.exports.removeUserFromBoard = async (req, res, next) => {
         res.status(500).json({ message: "Internal server error", success: false });
     }
 }
+
+module.exports.getBoardsForUser = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+
+        console.log(`${userId}`);
+
+        const [user] = await Promise.all([
+            User.findById(userId)
+        ]);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "Passed userId is invalid",
+                success: false
+            });
+        }
+
+        const boards = await Board.find({ 'members.memberId': userId })
+        console.log(boards);
+
+        res.status(200).json({ message: "boards for user retrieved successfully", 
+                               boards,
+                               boardCnt: boards.length, 
+                               success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error", success: false });
+    }
+}
+
+module.exports.deleteBoardById = async (req, res, next) => {
+    try {
+        const { boardId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(boardId)) {
+            return res.status(400).json({
+                message: "Invalid boardId",
+                success: false
+            });
+        }
+
+        const board = await Board.findById(boardId);
+
+        if (!board) {
+            return res.status(404).json({
+                message: "Board not found",
+                success: false
+            });
+        }
+
+        const deletedBoard = await Board.findByIdAndDelete(boardId);
+        console.log(`deletedBoard ${deletedBoard}`);
+
+        // Return board details in the response
+        res.status(200).json({
+            message: "Board deleted successfully",
+            success: true
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
