@@ -83,7 +83,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", authRoute);
-app.use("/board", verifyAuthHeaderAndRole([Roles.USER]), boardRoute)
+app.use("/board", boardRoute) // Todo: Authentication to be added after Auth Implementation on UI side: verifyAuthHeaderAndRole([Roles.USER]),
 
 /*
   Testing route for authentication header

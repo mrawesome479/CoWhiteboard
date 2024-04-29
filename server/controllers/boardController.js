@@ -182,10 +182,24 @@ module.exports.getBoardsForUser = async (req, res, next) => {
         const boards = await Board.find({ 'members.memberId': userId })
         console.log(boards);
 
-        res.status(200).json({ message: "boards for user retrieved successfully", 
-                               boards,
-                               boardCnt: boards.length, 
-                               success: true });
+        const respBoard = [];
+        boards.forEach((board) => {
+            const member = board.members.find(m => m.memberId.equals(userId));
+            if (member) {
+                respBoard.push({ 
+                    ...board._doc, 
+                    role: member.memberRole,
+                    lastAccessedAt:  member.lastAccessedAt
+                });
+            }
+        });
+
+        res.status(200).json({
+            message: "boards for user retrieved successfully",
+            respBoard, 
+            boardCnt: respBoard.length, 
+            success: true
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error", success: false });
