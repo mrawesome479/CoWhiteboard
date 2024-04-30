@@ -10,3 +10,53 @@ canvas background
 
 for elements please refer below style guide and do check for possibility of elements can be generated.
 https://github.com/rough-stuff/rough/wiki#simplification
+
+
+====
+
+Multiple user & Multiple board real time event with socket IO flow added,
+
+data structure to cache the board information in node server:
+
+boards = Map()
+
+{
+	"board-1": [board-1-elements],
+	"board-2": [board-2-elements],
+	...
+}
+
+userSessions = Map() 
+
+{
+	"userId": "socket.id / socket session id"
+}
+
+boardUserMapping = Map()
+
+{
+	"board-1": [user-1-id, user-2-id,...],
+	"board-2": [user-1-id, user-2-id, user-3-id,...],
+}
+
+===
+Rough flow:
+
+User opens board UI in window 
+	- user register / connect for socket with (userId & boardId) - server will create room with boardId and cache board elements in application data
+===
+Socket event Types:
+
+USER_CONNECT
+BOARD_JOINED
+BOARD_STATE_CHANGE
+BOARD_ELEMENT_UPDATE
+BOARD_CLEAR
+CURSOR_POSITION_CHANGE
+UESR_DISCONNECT
+===
+
+USER_CONNECT - 
+client opens board view then client sents USER_CONNECT event with userId, boardId, so user will join the room with boardId, if not exists room will get created and will update required data structures on server.
+client will get latest board elements data for boardId with BOARD_JOINED on client, based on this client will update store with board elements, board active users data & active cursors.
+
