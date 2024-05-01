@@ -1,46 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Grid, Card, CardContent, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Grid } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import Stack from '@mui/material/Stack';
 import { fetchBoardsForUser } from '../services/apiService';
-
-const BoardItem = ({ name, description, role, memberCnt, lastAccessedAt }) => (
-  <Grid item xs={4}>
-    <Card>
-      <CardContent>
-        <Grid container>
-            <Grid item xs={8}>
-                <Typography variant="h6" component="div">
-                    {name}
-                </Typography>
-                <Typography variant="body2">{description}</Typography>
-            </Grid>
-            <Grid item xs={4}>
-                <Stack direction="row" spacing={2}>
-                    <Button variant="outlined" color='error' startIcon={<DeleteIcon />}>
-                        Delete
-                    </Button>
-                    <Button variant="contained" startIcon={<VisibilityIcon />}>
-                        Open
-                    </Button>
-                </Stack>
-            </Grid>
-            <Grid item xs={12}>
-                <Typography variant="body2" className='mt-5'>
-                    <Typography variant="body3"> <span className='f-bold'>Role: </span> {role} </Typography>
-                    <Typography variant="body3"> <span className='f-bold ml-20'>Members: </span> {memberCnt} </Typography>
-                    <Typography variant="body3"> <span className='f-bold ml-20'>Last accessed at:</span> { lastAccessedAt === null ? 'you haven\'t accessed yet.' : new Date().toDateString()} </Typography>
-                </Typography>
-            </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  </Grid>
-);
+import BoardItem from '../components/BoardItem';
+import CreateNewBoard from '../components/CreateNewBoard';
 
 export const WhiteBoardsPage = () => {
+    const [isCreateNewBoardPage, setIsCreateNewBoardPage] = useState(false);
     const [boards, setBoards] = useState([]);
 
     useEffect(() => {
@@ -59,6 +25,10 @@ export const WhiteBoardsPage = () => {
   
       fetchDataAsync();
     }, []);
+
+    function handleToggleNewBoard() {
+      setIsCreateNewBoardPage(!isCreateNewBoardPage)
+    }
     
     return (
       <div>
@@ -73,12 +43,19 @@ export const WhiteBoardsPage = () => {
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} sx={{ padding: '20px' }}>
-          {boards.map((board) => (
+          <Grid item xs={12} md={12}>
+            {!isCreateNewBoardPage && <Button variant="contained" onClick={handleToggleNewBoard}>Create New Board</Button>}
+          </Grid>
+
+          {!isCreateNewBoardPage && boards.map((board) => (
             <BoardItem key={board._id} name={board.boardTitle} description={board.boardDescription}
             role={board.role}
             memberCnt={board.members.length}
             lastAccessedAt={board.lastAccessedAt} />
           ))}
+
+          {isCreateNewBoardPage && <CreateNewBoard canBtnHandler={handleToggleNewBoard} />}
+        
         </Grid>
       </div>
     );

@@ -302,6 +302,7 @@ const Whiteboard = () => {
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
         ref={canvasRef}
+        style={{ backgroundColor: '#c7f9cc' }}
         width={window.innerWidth - 5}
         height={window.innerHeight - 5}
       />
