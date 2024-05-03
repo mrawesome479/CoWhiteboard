@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Grid } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Button, Grid } from '@mui/material';
 import { fetchBoardsForUser } from '../services/apiService';
 import BoardItem from '../components/BoardItem';
 import CreateNewBoard from '../components/CreateNewBoard';
+import AppHeader from '../components/AppHeader';
 
 export const WhiteBoardsPage = () => {
+
     const [isCreateNewBoardPage, setIsCreateNewBoardPage] = useState(false);
     const [boards, setBoards] = useState([]);
 
@@ -32,16 +33,7 @@ export const WhiteBoardsPage = () => {
     
     return (
       <div>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              CoSketch
-            </Typography>
-            <IconButton>
-              <AccountCircleIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+        <AppHeader />
         <Grid container spacing={2} sx={{ padding: '20px' }}>
           <Grid item xs={12} md={12}>
             {!isCreateNewBoardPage && <Button variant="contained" onClick={handleToggleNewBoard}>Create New Board</Button>}
