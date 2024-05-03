@@ -60,3 +60,56 @@ USER_CONNECT -
 client opens board view then client sents USER_CONNECT event with userId, boardId, so user will join the room with boardId, if not exists room will get created and will update required data structures on server.
 client will get latest board elements data for boardId with BOARD_JOINED on client, based on this client will update store with board elements, board active users data & active cursors.
 
+====================
+
+Flow:
+
+
+1. Registration and Login with UI integration end to end
+	- token and user data in local storge on successful login
+	- registration and login success / failure snakc bar (https://mui.com/material-ui/react-snackbar/)
+	- if invalid token then redirect to login page with error / message 
+	- board related pages should be accessible by logged in users only
+	- logged in user name should show on top app bar with first name + last name with profile icon
+	- on profile icon click it should open menu with profile / logout option.
+		- profile menu item should open profile page with user details, edit profile to be supported (future).
+		- logout menu item click should show dialog with logout confirm and on click of yes application should logout and local store token and data should clean up from browser cache.
+
+2. Boards page UI flow end to end
+	- Board UI should list all boards with role, member cnt and action buttons based on role assigned to the logged in user.
+	- Create New Board button should open new board form and with validation, should be able to create a new board.
+	- Cancel button on New Board create page should redirect back to list of board pages and create new board page should reset.
+	- Create New Board should support mapping of user with role from all list and UI + API changes to be done from both ends.
+	- Update board functionality to be supported based on Role.
+	- Board actions based on Role:
+		- OWNER : CRUD board & members & members permission
+		- EDITOR : EDIT board only
+		- VIEWER : only view permission for board
+	
+3. Board UI 
+	- Tools selection
+	- Draw, Drag and Delete operation (Delete R&D) for elements in board, 
+	- Entire board clean up to be done only by OWNER
+	- Events
+		- client opens board UI 
+			- client: 
+				store the boardId, get the board elements data for selected board from backend and store it in redux store, get active users 	for board data from backend and plot that data on board UI.
+				client sent a connect / subscribe socket event to server with userId & boardId to receive real time events for the board which is open.
+			- server:
+				once client sents connect event with boardId & userId, server needs to add those details on server store and need to take action as per below flow:
+					- store client details for board active users
+					- add clientId to the room of roomId, notify active users regarding new member active event and sent socket event for that
+					- cache board elements if not cached on server data structure storage.
+		- client changes any element (create, update, delete) on active board
+			- client:
+				dispatch event to client storage based on client action for elements and update local storage data accordingly. sent socket event to the server based on client operation and then server has to take care to broadcast and update it to other users.
+			- server:
+				once server receives elements create, update, delete event from client, server will take action based on event actions and sent respective action to members of boardId room.
+		- client received board changes events for CRUD elements:
+			- client:
+				- once client receives elements update events for board from server then client has to take action based on received event type and has to update local redux store and render updated elements data to the board UI
+
+4. CronJob for update of board data to the database.
+	- for active boards on update events for that data first it will update in local cache of application in server then cronjob will update that to the respective database strucutre using cronjob
+	- cronjob run time should be configurable (idle time can be 30 seconds / 1 minute)
+	- need to think of Redis for cache of board elements. (PoC if possble)
