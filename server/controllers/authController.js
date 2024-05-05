@@ -37,14 +37,14 @@ module.exports.SignIn = async (req, res, next) => {
         
         const user = await User.findOne({ email });
         if(!user){
-            return res.json({message:'Incorrect password or email', success: false }) 
+            return res.status(400).json({message:'Incorrect password or email', success: false }) 
         }
         const auth = await bcrypt.compare(password, user.password)
         if (!auth) {
             return res.json({message:'Incorrect password or email', success: false }) 
         }
         const token = createSecretToken(user._id);
-        res.status(201).json({ message: "User logged in successfully", success: true, token });
+        res.status(201).json({ message: "User logged in successfully", success: true, token, userId: user._id });
         next()
     } catch (error) {
         console.error(error);
