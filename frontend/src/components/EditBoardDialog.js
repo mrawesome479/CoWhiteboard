@@ -8,7 +8,7 @@ const EditBoardComponent = ({ open, handleClose }) => {
         Edit Board details page to be implement here
       </DialogTitle>
       <DialogContent>
-        <p>Dialog content goes here...</p>
+        <p>Future... :)</p>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>

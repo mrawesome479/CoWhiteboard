@@ -40,10 +40,10 @@ export const WhiteBoardsPage = () => {
           </Grid>
 
           {!isCreateNewBoardPage && boards.map((board) => (
-            <BoardItem key={board._id} name={board.boardTitle} description={board.boardDescription}
-            role={board.role}
-            memberCnt={board.members.length}
-            lastAccessedAt={board.lastAccessedAt} />
+              <BoardItem key={board._id} boardId={board._id} name={board.boardTitle} description={board.boardDescription}
+                role={board.role}
+                memberCnt={board.members.length}
+                lastAccessedAt={board.lastAccessedAt} />
           ))}
 
           {isCreateNewBoardPage && <CreateNewBoard canBtnHandler={handleToggleNewBoard} />}

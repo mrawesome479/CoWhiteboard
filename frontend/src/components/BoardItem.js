@@ -5,8 +5,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import EditBoardDialog from './EditBoardDialog';
 import ConfirmModal from './ConfirmModal';
+import { useNavigate } from 'react-router-dom';
+import { deleteBoardById } from '../services/apiService';
 
-const BoardItem = ({ name, description, role, memberCount, lastAccessedAt }) => {
+const BoardItem = ({ boardId, name, description, role, memberCnt, lastAccessedAt }) => {
+
+    const navigate = useNavigate();
+
     const [openEditDialog, setOpenEditDialog] = useState(false); 
     const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false);
     const [openOpenBoardConfirmDialog, setOpenOpenBoardConfirmDialog] = useState(false);
@@ -19,19 +24,42 @@ const BoardItem = ({ name, description, role, memberCount, lastAccessedAt }) => 
         setOpenEditDialog(false);
     };
 
+    const handleOpenBoard = () => {
+        console.log(`handleOpenBoard called... for ${boardId}`)
+        setOpenOpenBoardConfirmDialog(true);
+    };
+
+    const handleOpenBoardConfirm = () => {
+        console.log(`handleOpenBoardConfirm called...`);
+        navigate(`../whiteboard/${boardId}`)
+    }
+
     const handleDeleteBoard = () => {
+        console.log(`handleDeleteBoard called...`);
         setOpenDeleteConfirmDialog(true);
     };
     
     const handleDeleteClose = () => {
+        console.log(`handleDeleteClose called...`);
         setOpenDeleteConfirmDialog(false);
     };
 
-    const handleOpenBoard = () => {
-        setOpenOpenBoardConfirmDialog(true);
-    };
+    const handleDeleteBoardConfirm = async () => {
+        console.log(`handleDeleteBoardConfirm called...`);
+
+        try {
+            const responseData = await deleteBoardById(boardId); 
+            console.log(responseData);
+
+            window.location.reload();
+            setOpenDeleteConfirmDialog(false)
+        } catch (error) {
+            console.log(`error while deleting board : ${error}`);
+        }
+    }
 
     const handleCloseOpenBoardDialog = () => {
+        console.log(`handleCloseOpenBoardDialog called...`);
         setOpenOpenBoardConfirmDialog(false);
     };
 
@@ -67,7 +95,7 @@ const BoardItem = ({ name, description, role, memberCount, lastAccessedAt }) => 
                                     <span className='f-bold'>Role: </span> {role} 
                                 </Typography>
                                 <Typography variant="body3"> 
-                                    <span className='f-bold ml-20'>Members: </span> {memberCount} 
+                                    <span className='f-bold ml-20'>Members: </span> {memberCnt} 
                                 </Typography>
                                 <Typography variant="body3"> 
                                     <span className='f-bold ml-20'>Last accessed at:</span> { lastAccessedAt === null ? 'you haven\'t accessed yet.' : new Date().toDateString()} 
@@ -83,14 +111,14 @@ const BoardItem = ({ name, description, role, memberCount, lastAccessedAt }) => 
                 open={openDeleteConfirmDialog}
                 title="Delete Confirmation"
                 content="Are you sure you want to delete this item?"
-                onConfirm={handleDeleteBoard}
+                onConfirm={handleDeleteBoardConfirm}
                 onClose={handleDeleteClose}
             />
             <ConfirmModal
                 open={openOpenBoardConfirmDialog}
                 title="Open Board Confirmation"
                 content="Are you sure you want to open this board?"
-                onConfirm={handleOpenBoard}
+                onConfirm={handleOpenBoardConfirm}
                 onClose={handleCloseOpenBoardDialog}
             />
         </Grid>
