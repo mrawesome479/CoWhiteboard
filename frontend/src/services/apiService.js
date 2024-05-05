@@ -31,3 +31,23 @@ export const fetchBoardsForUser = async (userId) => {
       throw error;
     }
 };
+
+export const fetchAllUsersForSystem = async (userId) => {
+  try{
+    const response = await axios.post(`${API_URL}/user/getUsersOfSystem/${userId}`);
+    return response.data;
+  }catch(error){
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+
+export const createBoardWithMembers = async (reqbody) => {
+  try{
+    const response = await axios.post(`${API_URL}/board/createBoardWithMembers`, reqbody);
+    return response.data;
+  }catch(error){
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}

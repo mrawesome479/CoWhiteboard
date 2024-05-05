@@ -32,7 +32,7 @@ module.exports.SignIn = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         if(!email || !password) {
-            return res.json({message: 'please provide all required fields', success: false})
+            return res.status(400).json({message: 'please provide all required fields', success: false})
         }
         
         const user = await User.findOne({ email });
@@ -41,7 +41,7 @@ module.exports.SignIn = async (req, res, next) => {
         }
         const auth = await bcrypt.compare(password, user.password)
         if (!auth) {
-            return res.json({message:'Incorrect password or email', success: false }) 
+            return res.status(400).json({message:'Incorrect password or email', success: false }) 
         }
         const token = createSecretToken(user._id);
         res.status(201).json({ message: "User logged in successfully", success: true, token, userId: user._id });

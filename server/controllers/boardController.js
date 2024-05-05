@@ -38,6 +38,39 @@ module.exports.createBoard = async (req, res, next) => {
     }
 };
 
+module.exports.createBoardWithMembers = async (req, res, next) => {
+    try {
+        const { boardTitle, boardDescription, members } = req.body;
+
+        console.log(members);
+        
+        let memberObj = []
+        
+        members.forEach((member) => {
+            memberObj.push({
+                memberId: member.memberId,
+                memberRole: member.role,
+                lastAccessedAt: null
+            })
+        })
+
+        console.log(memberObj);
+
+        // Create the board
+        const board = await Board.create({
+            boardTitle,
+            boardDescription,
+            members: memberObj
+        });
+
+        console.log(`Board created with details: ${board}`);
+        res.status(201).json({ message: "Board created successfully", success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error", success: false });
+    }
+}
+
 module.exports.assignUserToBoard = async (req, res, next) => {
     try {
         const { boardId, userId, role } = req.body;

@@ -7,20 +7,20 @@ import AppHeader from '../components/AppHeader';
 
 export const WhiteBoardsPage = () => {
 
+    const userId = localStorage.getItem('userId');
+    
     const [isCreateNewBoardPage, setIsCreateNewBoardPage] = useState(false);
     const [boards, setBoards] = useState([]);
 
     useEffect(() => {
       const fetchDataAsync = async () => {
         try {
-          const responseData = await fetchBoardsForUser('661be3fab29b01e73b199d14'); // to get userId dynamically from local store after login
+          const responseData = await fetchBoardsForUser(userId);
           console.log(responseData);
           setBoards(responseData.respBoard);
         } catch (error) {
           // setError(error.message);
           console.log(`error while loading boads for user : ${error}`);
-        } finally {
-          // setLoading(false);
         }
       };
   

@@ -9,6 +9,7 @@ const { MONGO_URL, PORT } = process.env;
 
 const authRoute = require("./routes/authRoutes");
 const boardRoute = require("./routes/boardRoutes");
+const userRoute = require("./routes/userRoutes");
 
 const { verifyAuthHeaderAndRole } = require("./middlewares/authMiddlewares");
 const Roles = require("./constants/Roles");
@@ -84,6 +85,7 @@ app.get("/", (req, res) => {
 
 app.use("/", authRoute);
 app.use("/board", boardRoute) // Todo: Authentication to be added after Auth Implementation on UI side: verifyAuthHeaderAndRole([Roles.USER]),
+app.use("/user", userRoute)
 
 /*
   Testing route for authentication header
