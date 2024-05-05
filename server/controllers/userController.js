@@ -25,3 +25,21 @@ module.exports.getUsersOfSystem = async (req, res, next) => {
         res.status(500).json({ message: "Internal server error", success: false });
     }
 }
+
+module.exports.getUserInfoById = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+        console.log(`getUserInfoById called with ${userId}`);
+
+        const user = await User.findById(userId);
+        console.log(user);
+        if(!user){
+            return res.status(404).json({ message: 'User not found with provided userId', success: false})
+        }
+
+        res.status(200).json({ message: 'User info retrieved succesfully!!', user, success: true})
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error", success: false });
+    }
+}

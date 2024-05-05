@@ -51,3 +51,13 @@ export const createBoardWithMembers = async (reqbody) => {
     throw error;
   }
 }
+
+export const getUserInfoByUserId = async (userId) => {
+  try{
+    const response = await axios.get(`${API_URL}/user/${userId}`);
+    return response.data;
+  }catch(error){
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}

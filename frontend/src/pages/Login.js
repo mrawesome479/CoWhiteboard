@@ -48,6 +48,7 @@ export const Login = () => {
 
       localStorage.setItem('token', responseData.token);
       localStorage.setItem('userId', responseData.userId);
+      localStorage.setItem('fullname', responseData.fullname);
 
       navigate('/whiteboards');
       

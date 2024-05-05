@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Person2Icon from '@mui/icons-material/Person2';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ConfirmationModal from './ConfirmModal';
 
 const AppHeader = ({isProfilePage}) => {
+
+  const fullname = localStorage.getItem('fullname');
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLogoutConfirm, setLogoutConfirm] = useState(false);
 
@@ -38,7 +42,10 @@ const AppHeader = ({isProfilePage}) => {
 
   const handleLogoutConfirm = () => {
     console.log(`handleLogoutConfirm called`);
-    setLogoutConfirm(true)
+    setLogoutConfirm(false)
+
+    localStorage.clear();
+    navigate('/login')
   }
 
   const handleLogoutDialogClose = () => {
@@ -53,10 +60,15 @@ const AppHeader = ({isProfilePage}) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             CoSketch
           </Typography>
-          {!isProfilePage && 
-            <IconButton onClick={handleAvatarIconClick} color="inherit">
-            <AccountCircleIcon />
-          </IconButton>
+          {!isProfilePage &&
+            <>
+              <Typography>
+                {fullname}
+              </Typography>
+              <IconButton onClick={handleAvatarIconClick} color="inherit">
+                <AccountCircleIcon />
+              </IconButton>
+            </>
           }
           <Menu
             anchorEl={anchorEl}

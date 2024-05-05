@@ -1,41 +1,52 @@
 import AppHeader from "../components/AppHeader"
 import { Grid, Typography, Paper, Button, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getUserInfoByUserId } from "../services/apiService";
 
 export const Profile = () => {
+
+    const userId = localStorage.getItem('userId')
+    const [userInfo, setUserInfo] = useState({});
+
     const [formData, setFormData] = useState({
         currentPassword: '',
         newPassword: '',
         confirmNewPassword: '',
-      });
+    });
     
-      const handleChange = (e) => {
+    useEffect(() => {
+        const fetchDataAsync = async () => {
+            try {
+                const responseData = await getUserInfoByUserId(userId);
+                console.log(responseData);
+                setUserInfo(responseData.user);
+            } catch (error) {
+                console.log(`error while loading boads for user : ${error}`);
+            }
+        };
+      
+        fetchDataAsync();
+    }, [userId])
+
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
-          ...prevData,
-          [name]: value,
+            ...prevData,
+            [name]: value,
         }));
-      };
-    
-      const handleSubmit = (e) => {
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
         setFormData({
-          currentPassword: '',
-          newPassword: '',
-          confirmNewPassword: '',
+            currentPassword: '',
+            newPassword: '',
+            confirmNewPassword: '',
         });
-      };
-    
+    };
 
-    const userData = {
-        username: 'veeetmoradiya123',
-        email: 'veeetmoradiya123@gmail.com',
-        firstName: 'veet',
-        lastName: 'moradiya',
-        role: 'ADMIN',
-    }
 
     const handleNaviagateBack = () => {
         window.history.back();
@@ -55,12 +66,12 @@ export const Profile = () => {
      
                 <Grid item xs={6} style={{ marginLeft: 10}}>
                     <Paper elevation={3} style={{padding: 10}}>
-                        <Typography variant="h6">Username: {userData.username}</Typography>
-                        <Typography variant="body1">Email: {userData.email}</Typography>
-                        <Typography variant="body1">First Name: {userData.firstName}</Typography>
-                        <Typography variant="body1">Last Name: {userData.lastName}</Typography>
-                        <Typography variant="body1">Role: {userData.role}</Typography>
-                        <Typography variant="body1">Created At: {new Date().toLocaleString()}</Typography>
+                        <Typography variant="h6">Username: {userInfo.username}</Typography>
+                        <Typography variant="body1">Email: {userInfo.email}</Typography>
+                        <Typography variant="body1">First Name: {userInfo.firstName}</Typography>
+                        <Typography variant="body1">Last Name: {userInfo.lastName}</Typography>
+                        <Typography variant="body1">Role: {userInfo.role}</Typography>
+                        <Typography variant="body1">Created At: {userInfo.createdAt}</Typography>
                     </Paper>
                 </Grid>
 
