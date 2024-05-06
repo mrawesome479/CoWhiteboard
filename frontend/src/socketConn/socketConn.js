@@ -5,11 +5,29 @@ import { removeCursorPosition, updateCursorPosition } from '../CursorOverlay/cur
 
 let socket;
 
-export const connectWithSocketServer = () => {
-    socket = io('http://localhost:5002')
+export const connectWithSocketServer = (boardId) => {
+    const userId = localStorage.getItem('userId')
+    
+    socket = io('http://localhost:5002', {
+        query: {
+            userId,
+            boardId
+        }
+    })
+
     socket.on('connect', () => {
         console.log('connected to socket io server');
     })
+
+    socket.on('BOARD_ELEMENTS', (element_data) => {
+        console.log(`BOARD_ELEMENTS : ${element_data}`);
+    })
+
+    socket.on('USER_BOARD_JOINED', (event_data) => {
+        console.log(event_data);
+    })
+
+    // old socket events below to be deleted once new flow is getting implemente
 
     socket.on("whiteboard-state", (elements) => {
         console.log(elements);

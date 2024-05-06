@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import { connectWithSocketServer } from "./socketConn/socketConn";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Registration } from "./pages/Registration";
@@ -20,10 +19,6 @@ const routes = [
 ];
 
 function App() {
-
-  useEffect(() => {
-    connectWithSocketServer();
-  }, [])
 
   return (
     <Router>
