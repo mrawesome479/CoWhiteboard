@@ -112,4 +112,46 @@ Flow:
 4. CronJob for update of board data to the database.
 	- for active boards on update events for that data first it will update in local cache of application in server then cronjob will update that to the respective database strucutre using cronjob
 	- cronjob run time should be configurable (idle time can be 30 seconds / 1 minute)
-	- need to think of Redis for cache of board elements. (PoC if possble)
+	- need to think of Redis for cache of board elements. (PoC if possible)
+
+
+====
+
+Dev Flow In depth
+===
+events:
+
+USER_CONNECT
+BOARD_ELEMENTS 
+USER_BOARD_JOINED
+USER_BOARD_LEAVE
+
+===
+Impl flow for socket events on the client & server.
+
+1. USER_CONNECT (CONNET event)
+
+client:
+
+{
+	"userId": "",
+	"boardId": ""
+}
+
+- process the request as below
+	- add socket_id with userId in userSessions map to maintain the data
+	- add userId into room with boardId, if room not exists with boardId please create else join the same room
+	- update boardUserMapping map with boardId and userId to maintain the data
+	- get boardElements from boards map if available else get elements data from DB and update boards map data and process with below notification
+		- publish BOARD_ELEMENTS event with boardID and boardElements to connected user socket id - to provide initial board elements on the client
+	- publish USER_BOARD_JOINED event with boardID and userId to the room with boardId - to provide user connected info to the other subscribed users.
+	
+
+2. USER_DISCONNECT (DISCONNECT event to be handle by server)
+
+- once user disconnect with any xyz reason, follow below process
+	- remove socket_id from userSessions map
+	- update boardUserMapping to remove user from map users list
+	- publish USER_BOARD_LEAVE event with boardID and userId to the room with boardId - to provide user disconnected info to the other subscribed users.
+
+3. 
