@@ -1,4 +1,4 @@
-import { toolTypes } from "../../constants";
+import { toolTypes } from "./../../../constants";
 
 export const adjustmentRequired = (type) =>
   [toolTypes.RECTANGLE, toolTypes.LINE].includes(type);

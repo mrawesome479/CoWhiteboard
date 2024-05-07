@@ -1,4 +1,4 @@
-import { toolTypes } from "../../constants";
+import { toolTypes } from "./../../../constants";
 
 export const adjustElementCoordinates = (element) => {
   const { type, x1, y1, x2, y2 } = element;

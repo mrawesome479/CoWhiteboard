@@ -2,7 +2,7 @@ import React, { useRef, useLayoutEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Menu from "./Menu";
 import rough from "roughjs/bundled/rough.esm";
-import { actions, cursorPositions, toolTypes } from "../constants";
+import { actions, cursorPositions, toolTypes } from "./../../constants";
 import {
   createElement,
   updateElement,
@@ -16,7 +16,7 @@ import {
 } from "./utils";
 import { v4 as uuid } from "uuid";
 import { updateElement as updateElementInStore } from "./whiteboardSlice";
-import { emitCursorPosition } from "../socketConn/socketConn";
+import { emitCursorPosition } from "./../../socketConn/socketConn";
 
 let emitCursor = true;
 let lastCursorPosition;

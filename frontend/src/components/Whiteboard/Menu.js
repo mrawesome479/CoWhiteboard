@@ -1,15 +1,15 @@
 import React from "react";
-import rectangleIcon from "../resources/icons/rectangle.svg";
-import lineIcon from '../resources/icons/line.svg';
-import rubberIcon from '../resources/icons/rubber.svg';
-import pencilIcon from '../resources/icons/pencil.svg';
-import textIcon from '../resources/icons/text.svg';
-import selectionIcon from '../resources/icons/selection.svg';
-import circleIcon from '../resources/icons/circle.svg';
-import { toolTypes } from "../constants";
+import rectangleIcon from "./../../resources/icons/rectangle.svg"; 
+import lineIcon from './../../resources/icons/line.svg';
+import rubberIcon from './../../resources/icons/rubber.svg';
+import pencilIcon from './../../resources/icons/pencil.svg';
+import textIcon from './../../resources/icons/text.svg';
+import selectionIcon from './../../resources/icons/selection.svg';
+import circleIcon from './../../resources/icons/circle.svg';
+import { toolTypes } from "./../../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { setElements, setToolType } from "./whiteboardSlice";
-import { emitClearWhiteboard } from "../socketConn/socketConn";
+import { emitClearWhiteboard } from "./../../socketConn/socketConn";
 
 const IconButton = ({ src, type, isRubber }) => {
   const dispatch = useDispatch();

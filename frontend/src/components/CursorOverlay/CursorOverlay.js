@@ -1,6 +1,6 @@
 import React from 'react'
 import {useSelector} from 'react-redux';
-import cursor from '../resources/icons/selection.svg';
+import cursor from './../../resources/icons/selection.svg'; 
 
 const CursorOverlay = () => {
   const cursors = useSelector((state) => state.cursor.cursors)
