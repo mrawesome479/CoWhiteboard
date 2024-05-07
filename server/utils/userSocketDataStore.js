@@ -1,12 +1,14 @@
 const { doesBoardExist, getBoardContentById, createNewBoard } = require("../handler/boardDataHandler");
 
 let userSessions = new Map()
+let userBoards = new Map()
 let boardUserMapping = new Map()
 let boards = new Map()
 
-const addUserSession = (userId, socketId) => {
+const addUserSession = (userId, boardId, socketId) => {
     console.log(`addUserSession called with ${userId} and ${socketId}`);
     userSessions.set(userId, socketId);
+    userBoards.set(userId, boardId);
     console.log(userSessions);
 }
 
@@ -47,6 +49,34 @@ const getBoardElementDataElseIfRequireCreateNewBoard = async (boardId) => {
     }
 }
 
+const removeUserDisconnectData = (socketId, userId, boardId) => {
+    console.log(`removeUserDisconnectData called with socketID: ${socketId}, userId: ${userId}, boardId: ${boardId}`);
+    if(userId !== null){
+        let boardMappedUsers = boardUserMapping.get(boardId)
+        console.log(`boardMappedUsers for boardID : ${boardMappedUsers}`);
+        if(boardMappedUsers.includes(userId)){
+            let _boardMappedUsers = boardMappedUsers.filter((user_id) => user_id !== userId)
+            console.log(`_boardMappedUsers : ${_boardMappedUsers}`);
+            boardUserMapping.set(boardId, _boardMappedUsers)
+        }
+
+        userBoards.delete(userId)
+        userSessions.delete(userId)
+    }
+}
+
+const getBoardIdAndUserIdForSocketId = async (socketId) => {
+    let userId = null;
+    for(let [key, value] of userSessions.entries()){
+        if(value === socketId){
+            userId = key;
+            break;
+        }
+    }
+    console.log(`userID found : ${userId}`);
+    return [userBoards.get(userId), userId];
+}
+
 module.exports = {
-    addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard
+    addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId
 };

@@ -24,6 +24,12 @@ export const connectWithSocketServer = (boardId) => {
     })
 
     socket.on('USER_BOARD_JOINED', (event_data) => {
+        console.log(`USER_BOARD_JOINED`);
+        console.log(event_data);
+    })
+
+    socket.on('USER_BOARD_LEAVE', (event_data) => {
+        console.log(`USER_BOARD_LEAVE`);
         console.log(event_data);
     })
 

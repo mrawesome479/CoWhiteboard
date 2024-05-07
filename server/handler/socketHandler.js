@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const { addUserSession } = require("../utils/userSocketDataStore");
-const { userConnectHandler } = require("./socketEventHandler");
+const { userConnectHandler, userDisconnectHandler } = require("./socketEventHandler");
 
 let elements = [];
 
@@ -18,6 +18,11 @@ const initSocket = (server) => {
     
     console.log(`connect user called with User ID: ${userId}, BoardId: ${boardId}`);
     await userConnectHandler(io, socket, userId, boardId)
+
+
+    socket.on("disconnect", async () => {
+      await userDisconnectHandler(io, socket.id);
+    });
 
     // below code to be implemented later
     
@@ -38,10 +43,6 @@ const initSocket = (server) => {
         ...cursorData,
         userId: socket.id,
       });
-    });
-
-    socket.on("disconnect", () => {
-      socket.broadcast.emit("user-disconnected", socket.id);
     });
   });
 };
