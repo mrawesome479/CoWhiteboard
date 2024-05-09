@@ -11,7 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setElements, setToolType } from "./whiteboardSlice";
 import { emitClearWhiteboard } from "./../../socketConn/socketConn";
 
-const IconButton = ({ src, type, isRubber }) => {
+import { Button, IconButton } from '@mui/material';
+import { ArrowBack, Info, Edit } from '@mui/icons-material';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
+
+const CustomIconButton = ({ src, type, isRubber }) => {
   const dispatch = useDispatch();
 
   const selectedToolType = useSelector((state) => state.whiteboard.tool);
@@ -38,16 +43,47 @@ const IconButton = ({ src, type, isRubber }) => {
 };
 
 const Menu = () => {
+
+  const boardMembers = ["Remy Sharp", "Travis Howard", "Cindy Baker", "Agnes Walker", "Trevor Henderson"];
+
   return (
-    <>    
+    <>   
       <div className="menu_container">
-        <IconButton src={rectangleIcon} type={toolTypes.RECTANGLE} />
-        <IconButton src={circleIcon} type={toolTypes.CIRCLE} />
-        <IconButton src={lineIcon} type={toolTypes.LINE} />
-        <IconButton src={rubberIcon} isRubber />
-        <IconButton src={pencilIcon} type={toolTypes.PENCIL} />
-        <IconButton src={textIcon} type={toolTypes.TEXT} />
-        <IconButton src={selectionIcon} type={toolTypes.SELECTION} />
+        
+          <Button
+            variant="contained"
+            startIcon={<ArrowBack />}
+          >
+            Back
+          </Button>
+        
+          <CustomIconButton className='ml-20' src={rectangleIcon} type={toolTypes.RECTANGLE} />
+          <CustomIconButton src={circleIcon} type={toolTypes.CIRCLE} />
+          <CustomIconButton src={lineIcon} type={toolTypes.LINE} />
+          <CustomIconButton src={rubberIcon} isRubber />
+          <CustomIconButton src={pencilIcon} type={toolTypes.PENCIL} />
+          <CustomIconButton src={textIcon} type={toolTypes.TEXT} />
+          <CustomIconButton src={selectionIcon} type={toolTypes.SELECTION} />
+
+          <Button
+            variant="contained"
+            startIcon={<Info />}
+          >
+            Info
+          </Button>
+
+          <Button
+            variant="contained"
+            startIcon={<Edit />}
+          >
+            Manage Members
+          </Button>
+
+          <AvatarGroup max={4}>
+            {boardMembers.map((name, index) => (
+              <Avatar alt={name.charAt(0)} key={index}>{name.charAt(0)}</Avatar>
+            ))}
+        </AvatarGroup>
       </div>
     </>
   );
