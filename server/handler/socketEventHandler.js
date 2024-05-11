@@ -18,7 +18,7 @@ const userConnectHandler = async (io, socket, userId, boardId) => {
     console.log(`board data: ${boardElements}`);
 
     // publish BOARD_ELEMENTS event with boardID and boardElements to connected user socket id - to provide initial board elements on the client
-    io.to(socket.id).emit('BOARD_ELEMENTS', boardElements)
+    io.to(socket.id).emit('BOARD_ELEMENTS', JSON.stringify(boardElements))
 
     // publish USER_BOARD_JOINED event with boardID and userId to the room with boardId - to provide user connected info to the other subscribed users.
     const user = await User.findById({_id: userId})

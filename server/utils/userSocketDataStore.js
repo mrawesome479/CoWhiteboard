@@ -30,6 +30,7 @@ const getBoardElementDataElseIfRequireCreateNewBoard = async (boardId) => {
     console.log(`getBoardElementDataAndUpdateIfRequire called with ${boardId}`);
     if (boards.has(boardId)) {
         console.log(`boardId exists in cache`);
+        console.log(boards);
         return boards.get(boardId);
     } else {
         console.log(`boardId not there in cache`);

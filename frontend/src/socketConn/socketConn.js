@@ -21,6 +21,7 @@ export const connectWithSocketServer = (boardId) => {
 
     socket.on('BOARD_ELEMENTS', (element_data) => {
         console.log(`BOARD_ELEMENTS : ${element_data}`);
+        store.dispatch(setElements(JSON.parse(element_data)));
     })
 
     socket.on('USER_BOARD_JOINED', (event_data) => {
@@ -37,7 +38,7 @@ export const connectWithSocketServer = (boardId) => {
 
     socket.on("whiteboard-state", (elements) => {
         console.log(elements);
-        store.dispatch(setElements(elements));
+        // store.dispatch(setElements(elements));
     })
 
     socket.on("element-update", (elementData) =>{
