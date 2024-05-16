@@ -9,12 +9,13 @@ import circleIcon from './../../resources/icons/circle.svg';
 import { toolTypes } from "./../../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { setElements, setToolType } from "./whiteboardSlice";
-import { emitClearWhiteboard } from "./../../socketConn/socketConn";
+import { disconnectSocketConnection, emitClearWhiteboard } from "./../../socketConn/socketConn";
 
-import { Button, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import { ArrowBack, Info, Edit } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import { useNavigate } from "react-router-dom";
 
 const CustomIconButton = ({ src, type, isRubber }) => {
   const dispatch = useDispatch();
@@ -43,8 +44,13 @@ const CustomIconButton = ({ src, type, isRubber }) => {
 };
 
 const Menu = () => {
-
+  const navigate = useNavigate();
   const boardMembers = ["Remy Sharp", "Travis Howard", "Cindy Baker", "Agnes Walker", "Trevor Henderson"];
+
+  const handleBackButtonClick = () => {
+    disconnectSocketConnection()
+    navigate('../../whiteboards')
+  }
 
   return (
     <>   
@@ -53,6 +59,7 @@ const Menu = () => {
           <Button
             variant="contained"
             startIcon={<ArrowBack />}
+            onClick={handleBackButtonClick}
           >
             Back
           </Button>

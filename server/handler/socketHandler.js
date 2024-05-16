@@ -25,7 +25,6 @@ const initSocket = (server) => {
     });
 
     // below code to be implemented later
-    
     io.to(socket.id).emit("whiteboard-state", elements);
 
     socket.on("element-update", (elementData) => {
