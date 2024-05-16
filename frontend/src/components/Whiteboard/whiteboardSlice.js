@@ -21,8 +21,6 @@ const whiteboardSlice = createSlice({
       if (index === -1) {
         state.elements.push(action.payload);
       } else {
-        // if index will be found
-        // update element in our array of elements
         state.elements[index] = action.payload;
       }
     },

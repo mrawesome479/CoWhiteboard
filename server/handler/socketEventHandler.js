@@ -1,4 +1,4 @@
-const { addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId } = require("../utils/userSocketDataStore");
+const { addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId, getBoardElementByBoardId, updateBoardElementWithBoardId } = require("../utils/userSocketDataStore");
 const User = require("./../models/userModel");
 
 const userConnectHandler = async (io, socket, userId, boardId) => {
@@ -39,6 +39,37 @@ const userDisconnectHandler = async (io, socketId) => {
     io.to(boardId).except(socketId).emit('USER_BOARD_LEAVE', {boardId, user})
 }
 
+/*
+
+const updateElementInElements = (elementData) => {
+  const index = elements.findIndex((element) => element.id === elementData.id);
+
+  if (index === -1) return elements.push(elementData);
+
+  elements[index] = elementData;
+};
+
+*/
+const elementUpdateHandler = async (io, socket, eventData) => {
+    // get boardId and boardElements from eventData
+    const {boardId, boardElements } = eventData;
+    // console.log(`elementUpdateHandler called with ${boardId} & ${boardElements}`);
+    
+    // get board elements from cache
+    let boardElementsData = await getBoardElementByBoardId(boardId)
+    // console.log(boardElementsData);
+
+    // update element data on cache
+    const index = boardElementsData.findIndex((element) => element.id === boardElements.id);
+    if (index === -1) return boardElementsData.push(boardElements);
+
+    boardElementsData[index] = boardElements;
+    await updateBoardElementWithBoardId(boardId, boardElementsData);
+
+    // emit ELEMENT-UPDATE to the room with boardId
+    io.to(boardId).emit('ELEMENT-UPDATE', {boardId, boardElements})
+}
+
 module.exports = {
-    userConnectHandler, userDisconnectHandler
+    userConnectHandler, userDisconnectHandler, elementUpdateHandler
 };

@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const { addUserSession } = require("../utils/userSocketDataStore");
-const { userConnectHandler, userDisconnectHandler } = require("./socketEventHandler");
+const { userConnectHandler, userDisconnectHandler, elementUpdateHandler } = require("./socketEventHandler");
 
 let elements = [];
 
@@ -24,12 +24,10 @@ const initSocket = (server) => {
       await userDisconnectHandler(io, socket.id);
     });
 
-    // below code to be implemented later
-    io.to(socket.id).emit("whiteboard-state", elements);
-
-    socket.on("element-update", (elementData) => {
-      updateElementInElements(elementData);
-      socket.broadcast.emit("element-update", elementData);
+    socket.on("ELEMENT-UPDATE", async (eventData) => {
+      console.log(`ELEMENT-UPDATE called `);
+      // console.log(eventData);
+      await elementUpdateHandler(io, socket, eventData);
     });
 
     socket.on("whiteboard-clear", () => {
@@ -44,14 +42,6 @@ const initSocket = (server) => {
       });
     });
   });
-};
-
-const updateElementInElements = (elementData) => {
-  const index = elements.findIndex((element) => element.id === elementData.id);
-
-  if (index === -1) return elements.push(elementData);
-
-  elements[index] = elementData;
 };
 
 module.exports = {

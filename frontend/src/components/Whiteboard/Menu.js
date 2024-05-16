@@ -49,6 +49,7 @@ const Menu = () => {
 
   const handleBackButtonClick = () => {
     disconnectSocketConnection()
+    localStorage.removeItem('boardId')
     navigate('../../whiteboards')
   }
 

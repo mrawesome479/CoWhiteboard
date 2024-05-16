@@ -31,6 +31,7 @@ const BoardItem = ({ boardId, name, description, role, memberCnt, lastAccessedAt
 
     const handleOpenBoardConfirm = () => {
         console.log(`handleOpenBoardConfirm called...`);
+        localStorage.setItem('boardId', boardId)
         navigate(`../whiteboard/${boardId}`)
     }
 

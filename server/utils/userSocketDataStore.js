@@ -77,10 +77,25 @@ const getBoardIdAndUserIdForSocketId = async (socketId) => {
     return [userBoards.get(userId), userId];
 };
 
+const getBoardElementByBoardId = async (boardId) => {
+    if(boards.has(boardId)){
+        return boards.get(boardId);
+    }else{
+        console.log(`board with boardId: ${boardId} not exists in cache`);
+        return null;
+    }
+}
+
+const updateBoardElementWithBoardId = async (boardId, boardElements) => {
+    boards.set(boardId, boardElements);
+}
+
 module.exports = {
     addUserSession,
     mapUserToBoard,
     getBoardElementDataElseIfRequireCreateNewBoard,
     removeUserDisconnectData,
-    getBoardIdAndUserIdForSocketId
+    getBoardIdAndUserIdForSocketId,
+    getBoardElementByBoardId,
+    updateBoardElementWithBoardId
 };

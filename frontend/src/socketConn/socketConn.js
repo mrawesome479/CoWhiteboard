@@ -39,11 +39,12 @@ export const connectWithSocketServer = (boardId) => {
 
     socket.on("whiteboard-state", (elements) => {
         console.log(elements);
-        // store.dispatch(setElements(elements));
+        store.dispatch(setElements(elements));
     })
 
-    socket.on("element-update", (elementData) =>{
-        store.dispatch(updateElement(elementData));
+    socket.on("ELEMENT-UPDATE", (eventData) => {
+        const { boardElements } = eventData;
+        store.dispatch(updateElement(boardElements));
     })
 
     socket.on("whiteboard-clear", () => {
@@ -60,7 +61,11 @@ export const connectWithSocketServer = (boardId) => {
 }
 
 export const emitElementUpdate = (elementData) => {
-    socket.emit("element-update", elementData);
+    const eventData = {
+        "boardId": localStorage.getItem('boardId'),
+        "boardElements": elementData 
+    }
+    socket.emit("ELEMENT-UPDATE", eventData);
 }
 
 export const emitClearWhiteboard = () => {
