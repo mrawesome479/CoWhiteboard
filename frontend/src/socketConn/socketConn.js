@@ -35,28 +35,19 @@ export const connectWithSocketServer = (boardId) => {
         store.dispatch(removeActiveUserFromBoard(event_data['user']));
     })
 
-    // old socket events below to be deleted once new flow is getting implemente
-
-    socket.on("whiteboard-state", (elements) => {
-        console.log(elements);
-        store.dispatch(setElements(elements));
-    })
-
     socket.on("ELEMENT-UPDATE", (eventData) => {
         const { boardElements } = eventData;
         store.dispatch(updateElement(boardElements));
     })
 
-    socket.on("whiteboard-clear", () => {
+    socket.on("WHITEBOARD-CLEAR", () => {
+        console.log(`WHITEBOARD-CLEAR received`);
         store.dispatch(setElements([]));
     })
 
+    // old socket events below to be deleted once new flow is getting implemente
     socket.on("cursor-position", (cursorData) => {
         store.dispatch(updateCursorPosition(cursorData))
-    })
-
-    socket.on("user-disconnected", (disconnectedUserId) => {
-        store.dispatch(removeCursorPosition(disconnectedUserId))
     })
 }
 
@@ -69,7 +60,8 @@ export const emitElementUpdate = (elementData) => {
 }
 
 export const emitClearWhiteboard = () => {
-    socket.emit("whiteboard-clear");
+    const boardId = localStorage.getItem('boardId');
+    socket.emit("WHITEBOARD-CLEAR", boardId);
 }
 
 export const emitCursorPosition = (cursorData) => {

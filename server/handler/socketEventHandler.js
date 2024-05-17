@@ -1,4 +1,4 @@
-const { addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId, getBoardElementByBoardId, updateBoardElementWithBoardId } = require("../utils/userSocketDataStore");
+const { addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId, getBoardElementByBoardId, updateBoardElementWithBoardId, setWhiteBoardClearWithBoardId } = require("../utils/userSocketDataStore");
 const User = require("./../models/userModel");
 
 const userConnectHandler = async (io, socket, userId, boardId) => {
@@ -39,17 +39,6 @@ const userDisconnectHandler = async (io, socketId) => {
     io.to(boardId).except(socketId).emit('USER_BOARD_LEAVE', {boardId, user})
 }
 
-/*
-
-const updateElementInElements = (elementData) => {
-  const index = elements.findIndex((element) => element.id === elementData.id);
-
-  if (index === -1) return elements.push(elementData);
-
-  elements[index] = elementData;
-};
-
-*/
 const elementUpdateHandler = async (io, socket, eventData) => {
     // get boardId and boardElements from eventData
     const {boardId, boardElements } = eventData;
@@ -70,6 +59,15 @@ const elementUpdateHandler = async (io, socket, eventData) => {
     io.to(boardId).emit('ELEMENT-UPDATE', {boardId, boardElements})
 }
 
+const whiteboardClearHandler = async (io, boardId) => {
+    console.log(`whiteboardClearHandler called with boardId: ${boardId}`);
+
+    await setWhiteBoardClearWithBoardId(boardId);
+
+    // trigger WHITEBOARD-CLEAR event for boardId room
+    io.to(boardId).emit('WHITEBOARD-CLEAR')
+}
+
 module.exports = {
-    userConnectHandler, userDisconnectHandler, elementUpdateHandler
+    userConnectHandler, userDisconnectHandler, elementUpdateHandler, whiteboardClearHandler
 };

@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const { addUserSession } = require("../utils/userSocketDataStore");
-const { userConnectHandler, userDisconnectHandler, elementUpdateHandler } = require("./socketEventHandler");
+const { userConnectHandler, userDisconnectHandler, elementUpdateHandler, whiteboardClearHandler } = require("./socketEventHandler");
 
 let elements = [];
 
@@ -24,17 +24,22 @@ const initSocket = (server) => {
       await userDisconnectHandler(io, socket.id);
     });
 
+    // event for board element update / new element creation
     socket.on("ELEMENT-UPDATE", async (eventData) => {
       console.log(`ELEMENT-UPDATE called `);
       // console.log(eventData);
       await elementUpdateHandler(io, socket, eventData);
     });
 
-    socket.on("whiteboard-clear", () => {
-      elements = [];
-      socket.broadcast.emit("whiteboard-clear");
+    // event for board clean event
+    socket.on("WHITEBOARD-CLEAR", async (boardId) => {
+      console.log(`whiteboard clear event called with boardId: ${boardId}`);
+      await whiteboardClearHandler(io, boardId);
     });
 
+    // need to handle below : TODO
+
+    // event for user cursor position change
     socket.on("cursor-position", (cursorData) => {
       socket.broadcast.emit("cursor-position", {
         ...cursorData,

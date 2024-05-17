@@ -90,6 +90,12 @@ const updateBoardElementWithBoardId = async (boardId, boardElements) => {
     boards.set(boardId, boardElements);
 }
 
+const setWhiteBoardClearWithBoardId = async (boardId) => {
+    boards.set(boardId, []);
+
+    // need to see to update in database in future
+}
+
 module.exports = {
     addUserSession,
     mapUserToBoard,
@@ -97,5 +103,6 @@ module.exports = {
     removeUserDisconnectData,
     getBoardIdAndUserIdForSocketId,
     getBoardElementByBoardId,
-    updateBoardElementWithBoardId
+    updateBoardElementWithBoardId,
+    setWhiteBoardClearWithBoardId
 };
