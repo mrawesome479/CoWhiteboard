@@ -44,7 +44,7 @@ module.exports.SignIn = async (req, res, next) => {
             return res.status(400).json({message:'Incorrect password or email', success: false }) 
         }
         const token = createSecretToken(user._id);
-        res.status(201).json({ message: "User logged in successfully", success: true, token, userId: user._id, fullname: user.firstName+' '+user.lastName });
+        res.status(201).json({ message: "User logged in successfully", success: true, username: user.username, token, userId: user._id, fullname: user.firstName+' '+user.lastName });
         next()
     } catch (error) {
         console.error(error);

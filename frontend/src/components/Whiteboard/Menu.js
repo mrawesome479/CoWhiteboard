@@ -84,7 +84,7 @@ const Menu = () => {
             variant="contained"
             startIcon={<Edit />}
           >
-            Manage Members
+            View Members
           </Button>
 
           <AvatarGroup max={4}>

@@ -1,8 +1,6 @@
 const { Server } = require("socket.io");
 const { addUserSession } = require("../utils/userSocketDataStore");
-const { userConnectHandler, userDisconnectHandler, elementUpdateHandler, whiteboardClearHandler } = require("./socketEventHandler");
-
-let elements = [];
+const { userConnectHandler, userDisconnectHandler, elementUpdateHandler, whiteboardClearHandler, cursorPositionHandler } = require("./socketEventHandler");
 
 const initSocket = (server) => {
   const io = new Server(server, {
@@ -37,15 +35,11 @@ const initSocket = (server) => {
       await whiteboardClearHandler(io, boardId);
     });
 
-    // need to handle below : TODO
-
     // event for user cursor position change
-    socket.on("cursor-position", (cursorData) => {
-      socket.broadcast.emit("cursor-position", {
-        ...cursorData,
-        userId: socket.id,
-      });
+    socket.on("CURSOR-POSITION", async (eventData) => {
+      await cursorPositionHandler(io, socket, eventData);
     });
+
   });
 };
 

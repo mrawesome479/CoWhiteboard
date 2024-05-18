@@ -217,3 +217,17 @@ BOARD_CLEAR
 {
 	"boardId": "ObjectId of board"
 }
+
+
+===
+TODO:
+
+reset-password with e2e APIs
+Edit board PoC & Impl
+board open canvas page 
+	- Info
+	- View Members
+	- Active members avatar - dynamic from store & menu open / close on handle of that
+cronjob to store / update board element data in the database after some every periodic time interval
+route access restriction / auto login / auto logout on front end side
+open API documentation for REST APIs using swagger

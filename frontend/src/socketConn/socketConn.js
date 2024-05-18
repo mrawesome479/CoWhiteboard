@@ -33,6 +33,7 @@ export const connectWithSocketServer = (boardId) => {
         console.log(`USER_BOARD_LEAVE`);
         console.log(event_data);
         store.dispatch(removeActiveUserFromBoard(event_data['user']));
+        store.dispatch(removeCursorPosition(event_data['user']._id))
     })
 
     socket.on("ELEMENT-UPDATE", (eventData) => {
@@ -45,10 +46,10 @@ export const connectWithSocketServer = (boardId) => {
         store.dispatch(setElements([]));
     })
 
-    // old socket events below to be deleted once new flow is getting implemente
-    socket.on("cursor-position", (cursorData) => {
+    socket.on("CURSOR-POSITION", (cursorData) => {
         store.dispatch(updateCursorPosition(cursorData))
     })
+
 }
 
 export const emitElementUpdate = (elementData) => {
@@ -65,7 +66,15 @@ export const emitClearWhiteboard = () => {
 }
 
 export const emitCursorPosition = (cursorData) => {
-    socket.emit("cursor-position", cursorData)
+    const {x, y} = cursorData;
+    const eventData = {
+        x,
+        y,
+        username: localStorage.getItem('username'),
+        boardId: localStorage.getItem('boardId'),
+        userId: localStorage.getItem('userId')
+    }
+    socket.emit("CURSOR-POSITION", eventData)
 }
 
 export const disconnectSocketConnection = () => {

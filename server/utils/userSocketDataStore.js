@@ -96,6 +96,10 @@ const setWhiteBoardClearWithBoardId = async (boardId) => {
     // need to see to update in database in future
 }
 
+const getSocketIdFromUserId = (userId) => {
+    return userSessions.get(userId);
+}
+
 module.exports = {
     addUserSession,
     mapUserToBoard,
@@ -104,5 +108,6 @@ module.exports = {
     getBoardIdAndUserIdForSocketId,
     getBoardElementByBoardId,
     updateBoardElementWithBoardId,
-    setWhiteBoardClearWithBoardId
+    setWhiteBoardClearWithBoardId,
+    getSocketIdFromUserId
 };

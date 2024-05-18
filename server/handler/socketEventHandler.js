@@ -1,4 +1,4 @@
-const { addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId, getBoardElementByBoardId, updateBoardElementWithBoardId, setWhiteBoardClearWithBoardId } = require("../utils/userSocketDataStore");
+const { addUserSession, mapUserToBoard, getBoardElementDataElseIfRequireCreateNewBoard, removeUserDisconnectData, getBoardIdAndUserIdForSocketId, getBoardElementByBoardId, updateBoardElementWithBoardId, setWhiteBoardClearWithBoardId, getSocketIdFromUserId } = require("../utils/userSocketDataStore");
 const User = require("./../models/userModel");
 
 const userConnectHandler = async (io, socket, userId, boardId) => {
@@ -68,6 +68,23 @@ const whiteboardClearHandler = async (io, boardId) => {
     io.to(boardId).emit('WHITEBOARD-CLEAR')
 }
 
+const cursorPositionHandler = async (io, socket, eventData) => {
+    console.log(`cursorPositionHandler called with ${eventData}`);
+
+    const {x, y, userId, boardId, username} = eventData;
+
+    // get the socket Id of user
+    const socketId = getSocketIdFromUserId(userId);
+
+    // publish event to the room with boardId except user's socketId
+    io.to(boardId).except(socketId).emit("CURSOR-POSITION", {
+        x,
+        y,
+        username,
+        userId
+    })
+}
+
 module.exports = {
-    userConnectHandler, userDisconnectHandler, elementUpdateHandler, whiteboardClearHandler
+    userConnectHandler, userDisconnectHandler, elementUpdateHandler, whiteboardClearHandler, cursorPositionHandler
 };

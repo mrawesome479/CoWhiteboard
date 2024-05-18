@@ -12,7 +12,7 @@ const CursorOverlay = () => {
         position: 'absolute',
         left: c.x - 30,
         top: c.y - 30,
-      }}>{c.userId}</p>
+      }}>{c.username}</p>
       
       <img style={{
         position: 'absolute',
