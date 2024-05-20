@@ -50,3 +50,29 @@ module.exports.SignIn = async (req, res, next) => {
         console.error(error);
     }
 }
+
+module.exports.resetPasswordForUser = async (req, res, next) => {
+  try {
+      const { userId } = req.params;
+      const { currentPassword, newPassword } = req.body;
+
+      if(!userId || !currentPassword || !newPassword) {
+        return res.status(400).json({message: 'please provide all required fields', success: false})
+      }
+      
+      const user = await User.findOne({ _id: userId });
+      if(!user){
+        return res.status(400).json({message:'Incorrect userId', success: false }) 
+      }
+      const auth = await bcrypt.compare(currentPassword, user.password)
+      if (!auth) {
+        return res.status(400).json({message:'Incorrect current password', success: false }) 
+      }
+
+      user.password = await bcrypt.hash(newPassword, 12);
+      const updatedUser = await User.findByIdAndUpdate(userId, user, { new: true });
+      return res.status(200).json({ message: 'user password reset successful', success: true, updatedUser })
+  } catch (error) {
+      console.error(error);
+  }
+}
