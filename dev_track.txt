@@ -230,7 +230,7 @@ board open canvas page
 	- View Members
 	- Active members avatar - dynamic from store & menu open / close on handle of that
 cronjob to store / update board element data in the database after some every periodic time interval
-Edit board PoC & Impl
 route access restriction / auto login / auto logout on front end side
 open API documentation for REST APIs using swagger
 logging in backend application with log file.
+Edit board PoC & Impl
