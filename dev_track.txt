@@ -224,9 +224,9 @@ TODO:
 
 reset-password with e2e API
 	- API - done
-	- UI integration - pending
+	- UI integration - done
 board open canvas page 
-	- Info
+	- Info - 
 	- View Members
 	- Active members avatar - dynamic from store & menu open / close on handle of that
 cronjob to store / update board element data in the database after some every periodic time interval
