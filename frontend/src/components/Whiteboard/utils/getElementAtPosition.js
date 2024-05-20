@@ -1,4 +1,4 @@
-import { cursorPositions, toolTypes } from "../../constants";
+import { cursorPositions, toolTypes } from "./../../../constants";
 
 const nearPoint = (x, y, x1, y1, cursorPosition) => {
     return Math.abs(x - x1) < 5 && Math.abs(y - y1) ? cursorPosition : null;

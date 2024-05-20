@@ -1,4 +1,4 @@
-import { cursorPositions } from "../../constants";
+import { cursorPositions } from "./../../../constants";
 
 export const getCursorForPosition = (position) => {
     switch(position) {

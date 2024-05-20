@@ -1,6 +1,6 @@
 import React from 'react'
 import {useSelector} from 'react-redux';
-import cursor from '../resources/icons/selection.svg';
+import cursor from './../../resources/icons/selection.svg'; 
 
 const CursorOverlay = () => {
   const cursors = useSelector((state) => state.cursor.cursors)
@@ -12,7 +12,7 @@ const CursorOverlay = () => {
         position: 'absolute',
         left: c.x - 30,
         top: c.y - 30,
-      }}>{c.userId}</p>
+      }}>{c.username}</p>
       
       <img style={{
         position: 'absolute',

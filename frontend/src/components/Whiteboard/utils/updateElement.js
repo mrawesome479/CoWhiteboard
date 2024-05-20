@@ -1,6 +1,6 @@
-import { toolTypes } from "../../constants";
-import { emitElementUpdate } from "../../socketConn/socketConn";
-import { store } from "../../store/store";
+import { toolTypes } from "./../../../constants";
+import { emitElementUpdate } from "./../../../socketConn/socketConn";
+import { store } from "./../../../store/store";
 import { setElements } from "../whiteboardSlice";
 import { createElement } from "./createElement";
 

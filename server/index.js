@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const app = express();
 const http = require("http");
 const cors = require("cors");
-const { Server } = require("socket.io");
 require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
 
@@ -14,6 +13,8 @@ const userRoute = require("./routes/userRoutes");
 const { verifyAuthHeaderAndRole } = require("./middlewares/authMiddlewares");
 const Roles = require("./constants/Roles");
 
+const { initSocket } = require("./handler/socketHandler");
+
 const server = http.createServer(app);
 
 app.use(cors({
@@ -22,60 +23,17 @@ app.use(cors({
   credentials: true,
 }));
 
-
-// socket code section to support socket event, 
-// Todo: refactor in future
-let elements = [];
-
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("user connected");
-  io.to(socket.id).emit("whiteboard-state", elements);
-
-  socket.on("element-update", (elementData) => {
-    updateElementInElements(elementData);
-
-    socket.broadcast.emit("element-update", elementData);
-  });
-
-  socket.on("whiteboard-clear", () => {
-    elements = [];
-    socket.broadcast.emit("whiteboard-clear");
-  })
-
-  socket.on("cursor-position", (cursorData) => {
-    socket.broadcast.emit("cursor-position", {
-      ...cursorData,
-      userId: socket.id
-    })
-  })
-
-  socket.on("disconnect", () => {
-    socket.broadcast.emit("user-disconnected", socket.id)
-  })
-});
-
-const updateElementInElements = (elementData) => {
-  const index = elements.findIndex((element) => element.id === elementData.id);
-
-  if (index === -1) return elements.push(elementData);
-
-  elements[index] = elementData;
-};
-
 mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("MongoDB is  connected successfully"))
+  .then(() => console.log("MongoDB is connected successfully"))
   .catch((err) => console.error(err));
+
+setTimeout(() => {
+  initSocket(server); // Initialize socket.io
+}, 1000)
 
 app.use(express.json());
 

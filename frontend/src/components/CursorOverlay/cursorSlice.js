@@ -9,17 +9,19 @@ const cursorSlice = createSlice({
     initialState,
     reducers: {
         updateCursorPosition: (state, action) => {
-            const {x, y, userId} = action.payload
+            const {x, y, userId, username} = action.payload
             const index = state.cursors.findIndex((cursor)=> cursor.userId === userId)
             if(index !== -1){
                 state.cursors[index] = {
                     userId,
+                    username,
                     x,
                     y
                 }
             } else {
                 state.cursors.push({
                     userId,
+                    username,
                     x, 
                     y
                 })

@@ -1,4 +1,4 @@
-import { toolTypes } from "../../constants";
+import { toolTypes } from "./../../../constants";
 import { getStroke } from 'perfect-freehand';
 import { getSvgPathFromStroke } from ".";
 

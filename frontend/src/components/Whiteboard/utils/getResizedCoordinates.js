@@ -1,4 +1,4 @@
-import { cursorPositions } from "../../constants";
+import { cursorPositions } from "./../../../constants";
 
 export const getResizedCoordinates = (clientX, clientY, position, coordinates) => {
     const {x1, y1, x2, y2} = coordinates;
