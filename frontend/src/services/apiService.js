@@ -81,3 +81,13 @@ export const resetPassword = async (userId, reqbody) => {
     throw error;
   }
 }
+
+export const fetchBoardInfo = async (boardId) => {
+  try {
+    const response = await axios.get(`${API_URL}/board/${boardId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching board data:', error);
+    throw error;
+  }
+};

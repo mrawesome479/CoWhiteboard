@@ -226,11 +226,14 @@ reset-password with e2e API
 	- API - done
 	- UI integration - done
 board open canvas page 
-	- Info - 
-	- View Members
-	- Active members avatar - dynamic from store & menu open / close on handle of that
+	- Info - done
+	- Active members avatar - dynamic from store & menu open / close on handle of that - done
+
 cronjob to store / update board element data in the database after some every periodic time interval
 route access restriction / auto login / auto logout on front end side
 open API documentation for REST APIs using swagger
 logging in backend application with log file.
+Home Page design & Impl
+Export board as pdf / image
+Dockerize front end and backend application with DockerFile and simulate deployment using docker based deployment
 Edit board PoC & Impl
