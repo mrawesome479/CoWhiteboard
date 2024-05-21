@@ -100,6 +100,10 @@ const getSocketIdFromUserId = (userId) => {
     return userSessions.get(userId);
 }
 
+const getCachedBoardContents = () => {
+    return boards;
+}
+
 module.exports = {
     addUserSession,
     mapUserToBoard,
@@ -109,5 +113,6 @@ module.exports = {
     getBoardElementByBoardId,
     updateBoardElementWithBoardId,
     setWhiteBoardClearWithBoardId,
-    getSocketIdFromUserId
+    getSocketIdFromUserId,
+    getCachedBoardContents
 };

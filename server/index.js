@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const http = require("http");
 const cors = require("cors");
+const cron = require('node-cron');
 require("dotenv").config();
 const { MONGO_URL, PORT } = process.env;
 
@@ -14,6 +15,7 @@ const { verifyAuthHeaderAndRole } = require("./middlewares/authMiddlewares");
 const Roles = require("./constants/Roles");
 
 const { initSocket } = require("./handler/socketHandler");
+const { processCacheToDBStoreForBoardElements } = require("./utils/cronjobs");
 
 const server = http.createServer(app);
 
@@ -51,6 +53,10 @@ app.use("/user", userRoute)
 app.post("/test", verifyAuthHeaderAndRole([Roles.USER]), async (req, res) => {
   return res.json({ message: 'success'});
 })
+
+cron.schedule('*/30 * * * * *', () => {
+  processCacheToDBStoreForBoardElements();
+});
 
 server.listen(PORT, () => {
   console.log("server is running on port", PORT);
