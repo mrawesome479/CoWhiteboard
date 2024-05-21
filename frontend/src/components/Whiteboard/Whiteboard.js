@@ -276,7 +276,7 @@ const Whiteboard = () => {
 
   return (
     <>
-      <Menu />
+      <Menu canvasRef={canvasRef} />
       {action === actions.WRITING ? 
         <textarea 
           ref={textAreaRef}

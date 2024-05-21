@@ -15,9 +15,13 @@ import { Button } from '@mui/material';
 import { ArrowBack, Info } from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { fetchBoardInfo } from "../../services/apiService";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ImageIcon from '@mui/icons-material/Image';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 const CustomIconButton = ({ src, type, isRubber }) => {
   const dispatch = useDispatch();
@@ -44,7 +48,7 @@ const CustomIconButton = ({ src, type, isRubber }) => {
   );
 };
 
-const Menu = () => {
+const Menu = ({canvasRef}) => {
   const navigate = useNavigate();
   const boardMembers = useSelector((state) => state.whiteboard.activeUsers);
   
@@ -81,6 +85,27 @@ const Menu = () => {
     navigate('../../whiteboards');
   };
 
+  // Function to export canvas to an image
+  const exportToImage = () => {
+    const canvas = canvasRef.current;
+    const image = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'canvas-image.png';
+    link.click();
+  };
+
+  // Function to export canvas to a PDF
+  const exportToPDF = () => {
+    const canvas = canvasRef.current;
+    html2canvas(canvas).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 0, 0);
+      pdf.save('canvas.pdf');
+    });
+  };
+
   return (
     <>   
       <div className="menu_container">
@@ -99,6 +124,13 @@ const Menu = () => {
         <CustomIconButton src={pencilIcon} type={toolTypes.PENCIL} />
         <CustomIconButton src={textIcon} type={toolTypes.TEXT} />
         <CustomIconButton src={selectionIcon} type={toolTypes.SELECTION} />
+
+        <IconButton onClick={exportToImage} color="primary" aria-label="export to image">
+          <ImageIcon />
+        </IconButton>
+        <IconButton onClick={exportToPDF} color="secondary" aria-label="export to pdf">
+          <PictureAsPdfIcon />
+        </IconButton>
 
         <Button
           variant="contained"
@@ -125,10 +157,15 @@ const Menu = () => {
             <Typography variant="body2" color="textPrimary" component="div" style={{ marginTop: 2 }}>
               Description: {boardInfo.boardDescription}
             </Typography>
-            <Typography variant="body2" color="textPrimary" component="div" style={{ marginTop: 1 }}>
+            <Typography variant="body2" color="textPrimary" component="div" style={{ marginTop: 15 }}>
               Members: {boardInfo.members.length}
             </Typography>
-            <Typography variant="body2" color="textPrimary" component="div" style={{ marginTop: 1 }}>
+            {boardInfo.members.map((member, index) => (
+              <Typography key={index} variant="body2" color="textPrimary" component="div" style={{ marginTop: 1 }}>
+                {member.memberId} | {member.memberRole} | {member.lastAccessedAt}
+              </Typography>
+            ))}
+            <Typography variant="body2" color="textPrimary" component="div" style={{ marginTop: 15 }}>
               Created At: {boardInfo.createdAt}
             </Typography>
             <Typography variant="body2" color="textPrimary" component="div" style={{ marginTop: 1 }}>
