@@ -16,6 +16,8 @@ const Roles = require("./constants/Roles");
 
 const { initSocket } = require("./handler/socketHandler");
 const { processCacheToDBStoreForBoardElements } = require("./utils/cronjobs");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require("./swagger");
 
 const server = http.createServer(app);
 
@@ -42,6 +44,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello server is working");
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/", authRoute);
 app.use("/board", boardRoute) // Todo: Authentication to be added after Auth Implementation on UI side: verifyAuthHeaderAndRole([Roles.USER]),
