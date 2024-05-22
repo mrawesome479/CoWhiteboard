@@ -2,12 +2,20 @@ import AppHeader from "../components/AppHeader"
 import { Grid, Typography, Paper, Button, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEffect, useState } from "react";
-import { getUserInfoByUserId } from "../services/apiService";
+import Snackbar from '@mui/material/Snackbar';
+import { getUserInfoByUserId, resetPassword } from "../services/apiService";
 
 export const Profile = () => {
 
     const userId = localStorage.getItem('userId')
     const [userInfo, setUserInfo] = useState({});
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+        
+    const handleSnackbarClose = () => {
+      setOpenSnackbar(false);
+    };
 
     const [formData, setFormData] = useState({
         currentPassword: '',
@@ -37,14 +45,34 @@ export const Profile = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
-        setFormData({
-            currentPassword: '',
-            newPassword: '',
-            confirmNewPassword: '',
-        });
+        if(formData['newPassword'] !== formData['confirmNewPassword']){
+            setSnackbarMessage('new password and confirm password not matching!')
+            setOpenSnackbar(true)
+            return;
+        }
+        try{
+            const response = await resetPassword(userId, {
+                currentPassword: formData['currentPassword'],
+                newPassword: formData['newPassword']
+            })
+
+            console.log(response);
+            setSnackbarMessage(response.message)
+            setOpenSnackbar(true)
+            setFormData({
+                currentPassword: '',
+                newPassword: '',
+                confirmNewPassword: '',
+            });
+        }catch(error){
+            console.log(`error occured while reset password!!`);
+            console.log(error.response.data.message);
+            setSnackbarMessage(error.response.data.message)
+            setOpenSnackbar(true)
+        }
     };
 
 
@@ -124,6 +152,18 @@ export const Profile = () => {
                     </Paper>
                 </Grid>
             </Grid>
+
+            
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+            />
         </div>
     )
 }

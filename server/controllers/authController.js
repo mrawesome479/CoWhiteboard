@@ -13,7 +13,7 @@ module.exports.SignUp = async (req, res, next) => {
 
       if(!role || (role && !(role.toUpperCase() in Roles))){
         console.log(`passed role : ${role}`);
-        return res.json({ message: "invalid role is passed, plz provide valid role"})
+        return res.status(409).json({ message: "invalid role is passed, plz provide valid role"})
       }
 
       const user = await User.create({ email, password, firstName, role: role.toUpperCase(), lastName, username, createdAt });
@@ -32,7 +32,7 @@ module.exports.SignIn = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         if(!email || !password) {
-            return res.status(400).json({message: 'please provide all required fields', success: false})
+            return res.status(409).json({message: 'please provide all required fields', success: false})
         }
         
         const user = await User.findOne({ email });
@@ -44,7 +44,7 @@ module.exports.SignIn = async (req, res, next) => {
             return res.status(400).json({message:'Incorrect password or email', success: false }) 
         }
         const token = createSecretToken(user._id);
-        res.status(201).json({ message: "User logged in successfully", success: true, username: user.username, token, userId: user._id, fullname: user.firstName+' '+user.lastName });
+        res.status(200).json({ message: "User logged in successfully", success: true, username: user.username, token, userId: user._id, fullname: user.firstName+' '+user.lastName });
         next()
     } catch (error) {
         console.error(error);
@@ -57,7 +57,7 @@ module.exports.resetPasswordForUser = async (req, res, next) => {
       const { currentPassword, newPassword } = req.body;
 
       if(!userId || !currentPassword || !newPassword) {
-        return res.status(400).json({message: 'please provide all required fields', success: false})
+        return res.status(409).json({message: 'please provide all required fields', success: false})
       }
       
       const user = await User.findOne({ _id: userId });

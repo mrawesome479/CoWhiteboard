@@ -34,7 +34,7 @@ export const fetchBoardsForUser = async (userId) => {
 
 export const fetchAllUsersForSystem = async (userId) => {
   try{
-    const response = await axios.post(`${API_URL}/user/getUsersOfSystem/${userId}`);
+    const response = await axios.get(`${API_URL}/user/getUsersOfSystem/${userId}`);
     return response.data;
   }catch(error){
     console.error('Error fetching data:', error);
@@ -71,3 +71,23 @@ export const deleteBoardById = async (boardId) => {
     throw error;
   }
 }
+
+export const resetPassword = async (userId, reqbody) => {
+  try{
+    const response = await axios.post(`${API_URL}/reset-password/${userId}`, reqbody);
+    return response.data;
+  }catch(error){
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
+
+export const fetchBoardInfo = async (boardId) => {
+  try {
+    const response = await axios.get(`${API_URL}/board/${boardId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching board data:', error);
+    throw error;
+  }
+};
