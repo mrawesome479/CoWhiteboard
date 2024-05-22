@@ -233,9 +233,11 @@ Export board as pdf / image - done (image bg white pending)
 open API documentation for REST APIs using swagger - auth APIs done, users APIs done, board APIs done
 
 Home Page design & Impl
+README.md to be updated
 Dockerize front end and backend application with DockerFile and simulate deployment using docker based deployment
 logging in backend application with log file.
 
 Future:
 Edit board PoC & Impl
 route access restriction / auto login / auto logout on front end side
+
