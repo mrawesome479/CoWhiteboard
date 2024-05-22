@@ -34,7 +34,7 @@ export const fetchBoardsForUser = async (userId) => {
 
 export const fetchAllUsersForSystem = async (userId) => {
   try{
-    const response = await axios.post(`${API_URL}/user/getUsersOfSystem/${userId}`);
+    const response = await axios.get(`${API_URL}/user/getUsersOfSystem/${userId}`);
     return response.data;
   }catch(error){
     console.error('Error fetching data:', error);
