@@ -22,7 +22,7 @@ const swaggerSpec = require("./swagger");
 const server = http.createServer(app);
 
 app.use(cors({
-  origin: ["http://localhost:3000"],
+  origin: ["https://co-whiteboard.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
