@@ -1,5 +1,5 @@
-import AppHeader from "../components/AppHeader"
-import { Grid, Typography, Paper, Button, TextField } from '@mui/material';
+import AppHeader from "../components/AppHeader";
+import { Grid, Typography, Paper, Button, TextField, Box, Card, CardContent } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEffect, useState } from "react";
 import Snackbar from '@mui/material/Snackbar';
@@ -7,163 +7,187 @@ import { getUserInfoByUserId, resetPassword } from "../services/apiService";
 
 export const Profile = () => {
 
-    const userId = localStorage.getItem('userId')
-    const [userInfo, setUserInfo] = useState({});
+  const userId = localStorage.getItem('userId');
+  const [userInfo, setUserInfo] = useState({});
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const handleSnackbarClose = () => setOpenSnackbar(false);
 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-        
-    const handleSnackbarClose = () => {
-      setOpenSnackbar(false);
+  const [formData, setFormData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: ''
+  });
+    
+  useEffect(() => {
+    const fetchDataAsync = async () => {
+      try {
+        const responseData = await getUserInfoByUserId(userId);
+        setUserInfo(responseData.user);
+      } catch (error) {
+        console.log(`Error loading user info: ${error}`);
+      }
     };
+    fetchDataAsync();
+  }, [userId]);
 
-    const [formData, setFormData] = useState({
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.newPassword !== formData.confirmNewPassword) {
+      setSnackbarMessage('New password and confirm password do not match!');
+      setOpenSnackbar(true);
+      return;
+    }
+    try {
+      const response = await resetPassword(userId, {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      });
+      setSnackbarMessage(response.message);
+      setOpenSnackbar(true);
+      setFormData({
         currentPassword: '',
         newPassword: '',
-        confirmNewPassword: '',
-    });
-    
-    useEffect(() => {
-        const fetchDataAsync = async () => {
-            try {
-                const responseData = await getUserInfoByUserId(userId);
-                console.log(responseData);
-                setUserInfo(responseData.user);
-            } catch (error) {
-                console.log(`error while loading boads for user : ${error}`);
-            }
-        };
-      
-        fetchDataAsync();
-    }, [userId])
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(formData);
-        if(formData['newPassword'] !== formData['confirmNewPassword']){
-            setSnackbarMessage('new password and confirm password not matching!')
-            setOpenSnackbar(true)
-            return;
-        }
-        try{
-            const response = await resetPassword(userId, {
-                currentPassword: formData['currentPassword'],
-                newPassword: formData['newPassword']
-            })
-
-            console.log(response);
-            setSnackbarMessage(response.message)
-            setOpenSnackbar(true)
-            setFormData({
-                currentPassword: '',
-                newPassword: '',
-                confirmNewPassword: '',
-            });
-        }catch(error){
-            console.log(`error occured while reset password!!`);
-            console.log(error.response.data.message);
-            setSnackbarMessage(error.response.data.message)
-            setOpenSnackbar(true)
-        }
-    };
-
-
-    const handleNaviagateBack = () => {
-        window.history.back();
+        confirmNewPassword: ''
+      });
+    } catch (error) {
+      setSnackbarMessage(error.response.data.message);
+      setOpenSnackbar(true);
     }
+  };
 
-    return (
-        <div>
-            <AppHeader isProfilePage={true} />
+  const handleNavigateBack = () => {
+    window.history.back();
+  };
 
-            <Grid container spacing={2}>
-                <Grid item xs={6} style={{ marginTop: 5 }}>
-                    <Button onClick={handleNaviagateBack} variant="contained" style={{ marginLeft: 10, marginTop: 10}} startIcon={<ArrowBackIcon />}>Back</Button>
-                    <Typography variant="h5" align="center">
-                        Profile Page
-                    </Typography>
-                </Grid>
-     
-                <Grid item xs={6} style={{ marginLeft: 10}}>
-                    <Paper elevation={3} style={{padding: 10}}>
-                        <Typography variant="h6">Username: {userInfo.username}</Typography>
-                        <Typography variant="body1">Email: {userInfo.email}</Typography>
-                        <Typography variant="body1">First Name: {userInfo.firstName}</Typography>
-                        <Typography variant="body1">Last Name: {userInfo.lastName}</Typography>
-                        <Typography variant="body1">Role: {userInfo.role}</Typography>
-                        <Typography variant="body1">Created At: {userInfo.createdAt}</Typography>
-                    </Paper>
-                </Grid>
+  return (
+    <Box sx={{ background: 'linear-gradient(to right, #e0eafc, #cfdef3)', minHeight: '100vh', padding: 3 }}>
+      <AppHeader isProfilePage={true} />
+      
+      <Button 
+        onClick={handleNavigateBack} 
+        variant="contained" 
+        startIcon={<ArrowBackIcon />} 
+        sx={{
+          backgroundColor: '#007BFF', 
+          color: '#fff', 
+          mb: 3,
+          '&:hover': {
+            backgroundColor: '#0056b3'
+          }
+        }}
+      >
+        Back
+      </Button>
+      
+      <Typography variant="h4" align="center" sx={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, mb: 4 }}>
+        Profile Page
+      </Typography>
+      
+      <Grid container spacing={4} justifyContent="center">
+        <Grid item xs={12} md={5}>
+          <Card
+            sx={{
+              backdropFilter: 'blur(10px)',
+              background: 'rgba(255, 255, 255, 0.7)',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+              borderRadius: '20px',
+              p: 3
+            }}
+          >
+            <CardContent>
+              <Typography variant="h5" sx={{ mb: 2 }}>User Information</Typography>
+              <Typography variant="body1"><strong>Username:</strong> {userInfo.username}</Typography>
+              <Typography variant="body1"><strong>Email:</strong> {userInfo.email}</Typography>
+              <Typography variant="body1"><strong>First Name:</strong> {userInfo.firstName}</Typography>
+              <Typography variant="body1"><strong>Last Name:</strong> {userInfo.lastName}</Typography>
+              <Typography variant="body1"><strong>Role:</strong> {userInfo.role}</Typography>
+              <Typography variant="body1"><strong>Created At:</strong> {userInfo.createdAt}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-                <Grid item xs={6} style={{ marginTop: 5 }}>
-                    <Typography variant="h5" align="center">
-                        Reset password
-                    </Typography>
-                </Grid>
-     
-                <Grid item xs={6} style={{ marginLeft: 10}}>
-                    <Paper elevation={3} style={{padding: 10}}>
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                        fullWidth
-                        type="password"
-                        label="Current Password"
-                        name="currentPassword"
-                        value={formData.currentPassword}
-                        onChange={handleChange}
-                        margin="normal"
-                        variant="outlined"
-                        required
-                        />
-                        <TextField
-                        fullWidth
-                        type="password"
-                        label="New Password"
-                        name="newPassword"
-                        value={formData.newPassword}
-                        onChange={handleChange}
-                        margin="normal"
-                        variant="outlined"
-                        required
-                        />
-                        <TextField
-                        fullWidth
-                        type="password"
-                        label="Confirm New Password"
-                        name="confirmNewPassword"
-                        value={formData.confirmNewPassword}
-                        onChange={handleChange}
-                        margin="normal"
-                        variant="outlined"
-                        required
-                        />
-                        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '20px' }}>
-                            Reset Password
-                        </Button>
-                    </form>
-                    </Paper>
-                </Grid>
-            </Grid>
+        <Grid item xs={12} md={5}>
+          <Card
+            sx={{
+              backdropFilter: 'blur(10px)',
+              background: 'rgba(255, 255, 255, 0.7)',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+              borderRadius: '20px',
+              p: 3
+            }}
+          >
+            <CardContent>
+              <Typography variant="h5" sx={{ mb: 2 }}>Reset Password</Typography>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  fullWidth
+                  type="password"
+                  label="Current Password"
+                  name="currentPassword"
+                  value={formData.currentPassword}
+                  onChange={handleChange}
+                  margin="normal"
+                  variant="outlined"
+                  required
+                />
+                <TextField
+                  fullWidth
+                  type="password"
+                  label="New Password"
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  margin="normal"
+                  variant="outlined"
+                  required
+                />
+                <TextField
+                  fullWidth
+                  type="password"
+                  label="Confirm New Password"
+                  name="confirmNewPassword"
+                  value={formData.confirmNewPassword}
+                  onChange={handleChange}
+                  margin="normal"
+                  variant="outlined"
+                  required
+                />
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  sx={{ 
+                    mt: 3, 
+                    backgroundColor: '#28a745', 
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#218838'
+                    }
+                  }}
+                >
+                  Reset Password
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-            
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={5000}
-                onClose={handleSnackbarClose}
-                message={snackbarMessage}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-            />
-        </div>
-    )
-}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      />
+    </Box>
+  );
+};

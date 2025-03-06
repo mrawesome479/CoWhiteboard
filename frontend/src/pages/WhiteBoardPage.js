@@ -9,7 +9,7 @@ export const WhiteBoardPage = () => {
   const { boardId } = useParams()
 
   useEffect(() => {
-    console.log(`white board called with boardId : ${boardId}`);
+    // console.log(`white board called with boardId : ${boardId}`);
   
     connectWithSocketServer(boardId);
   }, [boardId])

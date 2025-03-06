@@ -16,7 +16,7 @@ export const WhiteBoardsPage = () => {
       const fetchDataAsync = async () => {
         try {
           const responseData = await fetchBoardsForUser(userId);
-          console.log(responseData);
+          // console.log(responseData);
           setBoards(responseData.respBoard);
         } catch (error) {
           // setError(error.message);
